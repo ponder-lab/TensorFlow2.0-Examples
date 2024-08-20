@@ -98,6 +98,7 @@ class FPN(tf.keras.Model):
         _, H, W, C = y.shape
         return tf.image.resize(x, size=(H, W), method="bilinear")
 
+    @tf.function
     def call(self, x, training=False):
         p1 = tf.nn.relu(self.bn1(self.conv1(x), training=training))
         p1 = tf.nn.max_pool2d(p1, ksize=3, strides=2, padding="SAME")

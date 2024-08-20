@@ -63,6 +63,7 @@ class RPNplus(tf.keras.Model):
                                                 padding='same', use_bias=False)
 
 
+    @tf.function
     def call(self, x, training=False):
         h = self.conv1_1(x)
         h = self.conv1_2(h)

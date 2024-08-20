@@ -25,6 +25,7 @@ class Encoder(tf.keras.Model):
         self.dense_2 = tf.keras.layers.Dense(64 , activation='tanh')
         self.dense_3 = tf.keras.layers.Dense(32 , activation='tanh')
         self.dense_4 = tf.keras.layers.Dense(2  , activation='sigmoid')
+    @tf.function
     def call(self, x, training=False):
         out = self.dense_1(x)
         out = self.dense_2(out)
@@ -40,6 +41,7 @@ class Decoder(tf.keras.Model):
         self.dense_2 = tf.keras.layers.Dense(64 , activation='tanh')
         self.dense_3 = tf.keras.layers.Dense(128, activation='tanh')
         self.dense_4 = tf.keras.layers.Dense(784, activation='sigmoid')
+    @tf.function
     def call(self, x, training=False):
         out = self.dense_1(x)
         out = self.dense_2(out)
@@ -52,6 +54,7 @@ class Autoencoder(tf.keras.Model):
         super(Autoencoder, self).__init__()
         self.encoder = Encoder()
         self.decoder = Decoder()
+    @tf.function
     def call(self, x, training=False):
         out = self.encoder(x, training)
         out = self.decoder(out, training)

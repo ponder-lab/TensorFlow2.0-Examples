@@ -100,6 +100,7 @@ with strategy.scope():
 
 # Defining Training Step
 with strategy.scope():
+    @tf.function
     def train_step(inputs):
         images, labels = inputs
 

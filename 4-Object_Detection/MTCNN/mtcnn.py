@@ -29,6 +29,7 @@ class PNet(tf.keras.Model):
         self.conv4_1 = tf.keras.layers.Conv2D(2, 1, 1, name='conv4-1')
         self.conv4_2 = tf.keras.layers.Conv2D(4, 1, 1, name='conv4-2')
 
+    @tf.function
     def call(self, x, training=False):
         out = self.prelu1(self.conv1(x))
         out = tf.nn.max_pool2d(out, 2, 2, padding="SAME")
@@ -58,6 +59,7 @@ class RNet(tf.keras.Model):
 
         self.flatten = tf.keras.layers.Flatten()
 
+    @tf.function
     def call(self, x, training=False):
         out = self.prelu1(self.conv1(x))
         out = tf.nn.max_pool2d(out, 3, 2, padding="SAME")
@@ -95,6 +97,7 @@ class ONet(tf.keras.Model):
 
         self.flatten = tf.keras.layers.Flatten()
 
+    @tf.function
     def call(self, x, training=False):
         out = self.prelu1(self.conv1(x))
         out = tf.nn.max_pool2d(out, 3, 2, padding="SAME")

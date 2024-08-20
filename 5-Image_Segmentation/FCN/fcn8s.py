@@ -63,6 +63,7 @@ class FCN8s(tf.keras.Model):
         self.upscore_pool4 = tf.keras.layers.Conv2DTranspose(
             n_class,  4, strides=2, padding='valid', use_bias=False)
 
+    @tf.function
     def call(self, x, training=False):
         h = x
         h = self.conv1_1(tf.keras.layers.ZeroPadding2D(padding=(100, 100))(h))

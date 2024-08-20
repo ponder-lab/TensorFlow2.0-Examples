@@ -241,6 +241,7 @@ def discriminator_loss(disc_real_output, disc_generated_output):
 
     return total_disc_loss
 
+@tf.function
 def generator_loss(disc_generated_output, gen_output, target):
     LAMBDA = 100
     gan_loss = loss_object(tf.ones_like(disc_generated_output), disc_generated_output)

@@ -95,6 +95,7 @@ def DataGenerator(synthetic_dataset_path, batch_size):
             target_masks[i]  = target[2]
         yield images, target_scores, target_bboxes, target_masks
 
+@tf.function
 def compute_loss(target_scores, target_bboxes, target_masks, pred_scores, pred_bboxes):
     """
     target_scores shape: [1, 45, 60, 9, 2],  pred_scores shape: [1, 45, 60, 9, 2]

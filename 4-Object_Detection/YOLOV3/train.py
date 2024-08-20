@@ -43,6 +43,7 @@ optimizer = tf.keras.optimizers.Adam()
 if os.path.exists(logdir): shutil.rmtree(logdir)
 writer = tf.summary.create_file_writer(logdir)
 
+@tf.function
 def train_step(image_data, target):
     with tf.GradientTape() as tape:
         pred_result = model(image_data, training=True)

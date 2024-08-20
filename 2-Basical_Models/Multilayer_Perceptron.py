@@ -65,6 +65,7 @@ biases = {
 
 
 # Create model
+@tf.function
 def multilayer_perceptron(x):
     # Hidden fully connected layer with 256 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
@@ -77,6 +78,7 @@ def multilayer_perceptron(x):
     return tf.nn.softmax(output)
 
 # Cross-Entropy loss function.
+@tf.function
 def cross_entropy(y_pred, y_true):
     # Encode label to a one hot vector.
     y_true = tf.one_hot(y_true, depth=10)
@@ -86,6 +88,7 @@ def cross_entropy(y_pred, y_true):
     return tf.reduce_mean(-tf.reduce_sum(y_true * tf.math.log(y_pred)))
 
 # Accuracy metric.
+@tf.function
 def accuracy(y_pred, y_true):
     # Predicted class is the index of highest score in prediction vector (i.e. argmax).
     correct_prediction = tf.equal(tf.argmax(y_pred, 1), tf.cast(y_true, tf.int64))
@@ -96,6 +99,7 @@ optimizer = tf.optimizers.SGD(learning_rate)
 
 
 # Optimization process.
+@tf.function
 def train_step(x, y):
     # Wrap computation inside a GradientTape for automatic differentiation.
     with tf.GradientTape() as tape:
