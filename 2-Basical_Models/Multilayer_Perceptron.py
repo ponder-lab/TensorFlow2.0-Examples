@@ -25,6 +25,9 @@
 import numpy as np
 import tensorflow as tf
 
+from scripts.utils import write_csv
+import timeit
+
 # Parameters
 learning_rate = 0.001
 training_steps = 3000
@@ -63,6 +66,8 @@ biases = {
     'out': tf.Variable(tf.random.normal([n_classes]))
 }
 
+start_time = timeit.default_timer()
+skipped_time = 0
 
 # Create model
 def multilayer_perceptron(x):
@@ -111,6 +116,11 @@ def train_step(x, y):
     # Update W and b following gradients.
     optimizer.apply_gradients(zip(gradients, trainable_variables))
 
+total_loss = 0
+loss_count = 0
+
+total_accuracy = 0
+accuracy_count = 0
 
 # Run training for the given number of steps.
 for step, (batch_x, batch_y) in enumerate(train_data.take(training_steps), 1):
@@ -120,6 +130,17 @@ for step, (batch_x, batch_y) in enumerate(train_data.take(training_steps), 1):
     if (step+1) % display_step == 0:
         pred = multilayer_perceptron(batch_x)
         loss  = cross_entropy(pred, batch_y)
+        total_loss += loss
+        loss_count += 1
         acc  = accuracy(pred, batch_y)
+        total_accuracy += acc
+        accuracy_count += 1
+        print_time = timeit.default_timer()
         print("step: %i, loss: %f, accuracy: %f" % (step+1, loss, acc))
+        skipped_time += timeit.default_timer() - print_time
 
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
+avg_accuracy = float(total_accuracy)/ float(accuracy_count)
+
+write_csv(__file__, accuracy=float(avg_accuracy), loss=float(avg_loss), time=time)
