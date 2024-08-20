@@ -18,6 +18,8 @@ import tensorflow as tf
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
 from tensorflow.keras import Model
 
+from scripts.utils import write_csv
+import timeit
 
 # Load and prepare the MNIST dataset.
 
@@ -34,6 +36,15 @@ train_ds = tf.data.Dataset.from_tensor_slices(
         (x_train, y_train)).shuffle(10000).batch(32)
 test_ds = tf.data.Dataset.from_tensor_slices(
         (x_test, y_test)).batch(32)
+
+start_time = timeit.default_timer()
+skipped_time = 0
+
+total_loss = 0
+loss_count = 0
+
+total_accuracy = 0
+accuracy_count = 0
 
 # Build the tf.keras model using the Keras model subclassing API
 class MyModel(Model):
@@ -92,16 +103,26 @@ for epoch in range(EPOCHS):
     for test_images, test_labels in test_ds:
         test_step(test_images, test_labels)
 
+    print_time = timeit.default_timer()
     template = 'Epoch {}, Loss: {}, Accuracy: {}, Test Loss: {}, Test Accuracy: {}'
     print(template.format(epoch+1,
                           train_loss.result(),
                           train_accuracy.result()*100,
                           test_loss.result(),
                           test_accuracy.result()*100))
+    total_loss += train_loss.result()
+    loss_count += 1
+    total_accuracy += train_accuracy.result()*100
+    accuracy_count += 1
+    skipped_time += timeit.default_timer() - print_time
     # Reset the metrics for the next epoch
     train_loss.reset_states()
     train_accuracy.reset_states()
     test_loss.reset_states()
     test_accuracy.reset_states()
 
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
+avg_accuracy = float(total_accuracy) / float(accuracy_count)
 
+write_csv(__file__, EPOCHS, float(avg_accuracy), float(avg_loss), time)
