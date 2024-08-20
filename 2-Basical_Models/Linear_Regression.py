@@ -66,7 +66,7 @@ loss_count = 0
 
 # Define a training loop
 learning_rate = 0.1
-EPOCHS = 300
+EPOCHS = 30
 for epoch in range(EPOCHS):
     with tf.GradientTape() as tape:
         loss = compute_loss(outputs, model(inputs))
