@@ -59,13 +59,19 @@ class Autoencoder(tf.keras.Model):
 
 
 (X_train, y_train), (X_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+start_time = timeit.default_timer()
+skipped_time = 0
+
 X_train = np.reshape(X_train, (-1, 784)) / 255.
 batch_size = 512
 optimizer = tf.keras.optimizers.Adam(lr=0.001)
 model = Autoencoder()
 sample = np.reshape(X_test[:5], (5, 784))
 
-for step in range(10000):
+EPOCHS = 10000
+
+for step in range(EPOCHS):
     true_image = X_train[np.random.choice(X_train.shape[0], batch_size)]
     with tf.GradientTape() as tape:
         pred_image = model(true_image, training=True)
