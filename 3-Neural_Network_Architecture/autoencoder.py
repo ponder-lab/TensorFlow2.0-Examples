@@ -17,6 +17,8 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
+from scripts.utils import write_csv
+import timeit
 
 class Encoder(tf.keras.Model):
     def __init__(self):
@@ -71,6 +73,9 @@ sample = np.reshape(X_test[:5], (5, 784))
 
 EPOCHS = 10000
 
+total_loss = 0
+loss_count = 0
+
 for step in range(EPOCHS):
     true_image = X_train[np.random.choice(X_train.shape[0], batch_size)]
     with tf.GradientTape() as tape:
@@ -78,14 +83,21 @@ for step in range(EPOCHS):
         loss = tf.reduce_mean(tf.square(pred_image-true_image))
         gradients = tape.gradient(loss, model.trainable_variables)
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-    if step % 200  == 0: print("=> %4d loss %.4f" %(step, loss))
+    if step % 200  == 0:
+        print_time = timeit.default_timer()
+        print("=> %4d loss %.4f" %(step, loss))
+        total_loss += loss
+        loss_count += 1
+        skipped_time += timeit.default_timer() - print_time
     if step % 1000 == 0:
         pred_image = model(sample, training=False)
         pred_image = np.reshape(pred_image, (5, 28, 28))
         show_image = np.concatenate(pred_image[:5], -1)
+        print_time = timeit.default_timer()
         plt.tight_layout()
         plt.imshow(show_image)
         plt.savefig("%d.png" %((step+1) // 2000))
+        skipped_time += timeit.default_timer() - print_time
 
 """
 visualize embedding in 2D
@@ -108,4 +120,7 @@ plt.tight_layout()
 plt.savefig("embedding.png")
 plt.show()
 
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
 
+write_csv(__file__, loss=float(avg_loss), time=time)
