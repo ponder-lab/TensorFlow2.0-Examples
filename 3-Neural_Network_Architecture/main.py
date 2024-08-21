@@ -14,6 +14,9 @@
 import tensorflow as tf
 from resnet import ResNet18, ResNet34, ResNet50, ResNet101, ResNet152
 
+from scripts.utils import write_csv
+import timeit
+
 lr = 0.0001
 batch_size = 32
 EPOCHS = 50
@@ -46,6 +49,15 @@ train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy
 test_loss = tf.keras.metrics.Mean(name='test_loss')
 test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
 
+start_time = timeit.default_timer()
+skipped_time = 0
+
+total_loss = 0
+loss_count = 0
+
+total_accuracy = 0
+accuracy_count = 0
+
 # Use tf.GradientTape to train the model.
 @tf.function
 def train_step(images, labels):
@@ -72,14 +84,26 @@ for epoch in range(EPOCHS):
     for test_images, test_labels in test_ds:
         test_step(test_images, test_labels)
 
+    print_time = timeit.default_timer()
     template = '=> Epoch {}, Loss: {:.4}, Accuracy: {:.2%}, Test Loss: {:.4}, Test Accuracy: {:.2%}'
     print(template.format(epoch+1,
                           train_loss.result(),
                           train_accuracy.result(),
                           test_loss.result(),
                           test_accuracy.result()))
+    total_loss += train_loss.result()
+    loss_count += 1
+    total_accuracy += train_accuracy.result()
+    accuracy_count += 1
+    skipped_time += timeit.default_timer() - print_time
     # Reset the metrics for the next epoch
     train_loss.reset_states()
     train_accuracy.reset_states()
     test_loss.reset_states()
     test_accuracy.reset_states()
+
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
+avg_accuracy = float(total_accuracy)/ float(accuracy_count)
+
+write_csv(__file__, epochs=EPOCHS, loss=float(avg_loss), accuracy=float(avg_accuracy), time=time)
