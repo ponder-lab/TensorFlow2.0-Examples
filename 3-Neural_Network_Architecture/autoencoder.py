@@ -71,7 +71,7 @@ optimizer = tf.keras.optimizers.Adam(lr=0.001)
 model = Autoencoder()
 sample = np.reshape(X_test[:5], (5, 784))
 
-EPOCHS = 10000
+EPOCHS = 1000
 
 total_loss = 0
 loss_count = 0
