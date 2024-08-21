@@ -13,6 +13,9 @@
 
 import tensorflow as tf
 
+from scripts.utils import write_csv
+import timeit
+
 """
 Implements a ResNet version of the FPN introduced in
 https://arxiv.org/pdf/1612.03144.pdf
@@ -128,6 +131,9 @@ def ResNet18_fpn():
 def ResNet34_fpn():
     return FPN(BasicBlock, [3, 4, 6, 3])
 
+start_time = timeit.default_timer()
+skipped_time = 0
+
 if __name__ == "__main__":
     ## Test model
     data = tf.ones(shape=[1, 416, 416, 3])
@@ -135,6 +141,10 @@ if __name__ == "__main__":
     model = ResNet34_fpn()
     fms = model(data)
     for fm in fms:
+        print_time = timeit.default_timer()
         print(fm.shape)
+        skipped_time += timeit.default_timer() - print_time
 
+time = timeit.default_timer() - start_time - skipped_time
+write_csv(__file__, time=time)
 
