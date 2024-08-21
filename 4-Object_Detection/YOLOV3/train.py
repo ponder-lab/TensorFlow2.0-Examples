@@ -84,9 +84,15 @@ def train_step(image_data, target):
             tf.summary.scalar("loss/prob_loss", prob_loss, step=global_steps)
         writer.flush()
 
+IMAGES = 10
+image_count = 0
 
 for epoch in range(cfg.TRAIN.EPOCHS):
     for image_data, target in trainset:
-        train_step(image_data, target)
+        if image_count < IMAGES:
+            train_step(image_data, target)
+            image_count += 1
+        else:
+            break
     model.save_weights("./yolov3")
 
