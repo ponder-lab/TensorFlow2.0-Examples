@@ -19,7 +19,7 @@ import timeit
 
 lr = 0.0001
 batch_size = 32
-EPOCHS = 50
+EPOCHS = 5
 
 # Build your model here
 model = ResNet18()
