@@ -118,7 +118,7 @@ plt.axis('off')
 plt.legend()
 plt.tight_layout()
 plt.savefig("embedding.png")
-plt.show()
+# plt.show()
 
 time = timeit.default_timer() - start_time - skipped_time
 avg_loss = float(total_loss) / float(loss_count)
