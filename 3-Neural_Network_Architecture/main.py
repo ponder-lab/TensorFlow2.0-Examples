@@ -28,11 +28,13 @@ cifar10 = tf.keras.datasets.cifar10
 x_train, x_test = x_train / 255.0, x_test / 255.0
 y_train, y_test = tf.reshape(y_train, (-1,)), tf.reshape(y_test, (-1,))
 
+SAMPLE = 1000
+
 # Use tf.data to batch and shuffle the dataset
 train_ds = tf.data.Dataset.from_tensor_slices(
-        (x_train, y_train)).shuffle(100).batch(batch_size)
+        (x_train, y_train)).take(SAMPLE).shuffle(100).batch(batch_size)
 test_ds = tf.data.Dataset.from_tensor_slices(
-        (x_test, y_test)).batch(batch_size)
+        (x_test, y_test)).take(SAMPLE).batch(batch_size)
 
 # Choose an optimizer and loss function for training
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
