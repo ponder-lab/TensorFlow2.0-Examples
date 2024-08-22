@@ -27,7 +27,7 @@ import timeit
 
 trainset = Dataset('train')
 logdir = "./data/log"
-steps_per_epoch = len(trainset)
+steps_per_epoch = 100 #len(trainset)
 global_steps = tf.Variable(1, trainable=False, dtype=tf.int64)
 warmup_steps = cfg.TRAIN.WARMUP_EPOCHS * steps_per_epoch
 total_steps = cfg.TRAIN.EPOCHS * steps_per_epoch
@@ -102,14 +102,13 @@ def train_step(image_data, target):
         loss_count.assign_add(1)
         skipped_time += timeit.default_timer() - print_time
 
-IMAGES = 10
-image_count = 0
+step_count = 0
 
 for epoch in range(cfg.TRAIN.EPOCHS):
     for image_data, target in trainset:
-        if image_count < IMAGES:
+        if step_count < steps_per_epoch:
             train_step(image_data, target)
-            image_count += 1
+            step_count += 1
         else:
             break
     print_time = timeit.default_timer()
