@@ -49,12 +49,12 @@ optimizer = tf.keras.optimizers.Adam()
 if os.path.exists(logdir): shutil.rmtree(logdir)
 writer = tf.summary.create_file_writer(logdir)
 
-total_loss = 0
+loss_accum = 0
 loss_count = 0
 
 @tf.function
 def train_step(image_data, target):
-    global skipped_time, loss_count
+    global skipped_time, loss_accum, loss_count
     with tf.GradientTape() as tape:
         pred_result = model(image_data, training=True)
         giou_loss=conf_loss=prob_loss=0
@@ -98,7 +98,7 @@ def train_step(image_data, target):
             tf.summary.scalar("loss/conf_loss", conf_loss, step=global_steps)
             tf.summary.scalar("loss/prob_loss", prob_loss, step=global_steps)
         writer.flush()
-        total_loss += total_loss
+        loss_accum += total_loss
         loss_count += 1
         skipped_time += timeit.default_timer() - print_time
 
@@ -117,6 +117,6 @@ for epoch in range(cfg.TRAIN.EPOCHS):
     skipped_time += timeit.default_timer() - print_time
 
 time = timeit.default_timer() - start_time - skipped_time
-avg_loss = float(total_loss) / float(loss_count)
+avg_loss = float(loss_accum) / float(loss_count)
 
 write_csv(__file__, epochs=cfg.TRAIN.EPOCHS, loss=float(avg_loss), time=time)
