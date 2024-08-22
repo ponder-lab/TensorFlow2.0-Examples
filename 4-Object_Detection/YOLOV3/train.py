@@ -49,7 +49,7 @@ optimizer = tf.keras.optimizers.Adam()
 if os.path.exists(logdir): shutil.rmtree(logdir)
 writer = tf.summary.create_file_writer(logdir)
 
-loss_accum = 0
+loss_accum = tf.Variable(0.)
 loss_count = 0
 
 @tf.function
@@ -98,7 +98,7 @@ def train_step(image_data, target):
             tf.summary.scalar("loss/conf_loss", conf_loss, step=global_steps)
             tf.summary.scalar("loss/prob_loss", prob_loss, step=global_steps)
         writer.flush()
-        loss_accum += total_loss
+        loss_accum.assign_add(total_loss)
         loss_count += 1
         skipped_time += timeit.default_timer() - print_time
 
@@ -117,6 +117,6 @@ for epoch in range(cfg.TRAIN.EPOCHS):
     skipped_time += timeit.default_timer() - print_time
 
 time = timeit.default_timer() - start_time - skipped_time
-avg_loss = float(loss_accum) / float(loss_count)
+avg_loss = tf.divide(loss_accum, loss_count)
 
-write_csv(__file__, epochs=cfg.TRAIN.EPOCHS, loss=float(avg_loss), time=time)
+write_csv(__file__, epochs=cfg.TRAIN.EPOCHS, loss=avg_loss.numpy(), time=time)
