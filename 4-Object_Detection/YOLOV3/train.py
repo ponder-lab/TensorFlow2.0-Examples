@@ -102,9 +102,9 @@ def train_step(image_data, target):
         skipped_time += timeit.default_timer() - print_time
 
 IMAGES = 100
-image_count = 0
 
 for epoch in range(cfg.TRAIN.EPOCHS):
+    image_count = 0
     for image_data, target in trainset:
         if image_count < IMAGES:
             train_step(image_data, target)
