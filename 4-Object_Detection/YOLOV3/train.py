@@ -50,7 +50,7 @@ if os.path.exists(logdir): shutil.rmtree(logdir)
 writer = tf.summary.create_file_writer(logdir)
 
 loss_accum = tf.Variable(0.)
-loss_count = 0
+loss_count = tf.Variable(0)
 
 @tf.function
 def train_step(image_data, target):
@@ -99,7 +99,7 @@ def train_step(image_data, target):
             tf.summary.scalar("loss/prob_loss", prob_loss, step=global_steps)
         writer.flush()
         loss_accum.assign_add(total_loss)
-        loss_count += 1
+        loss_count.assign_add(1)
         skipped_time += timeit.default_timer() - print_time
 
 IMAGES = 10
@@ -117,6 +117,6 @@ for epoch in range(cfg.TRAIN.EPOCHS):
     skipped_time += timeit.default_timer() - print_time
 
 time = timeit.default_timer() - start_time - skipped_time
-avg_loss = tf.divide(loss_accum, loss_count)
+avg_loss = tf.divide(loss_accum, tf.cast(loss_count, tf.float32))
 
 write_csv(__file__, epochs=cfg.TRAIN.EPOCHS, loss=avg_loss.numpy(), time=time)
