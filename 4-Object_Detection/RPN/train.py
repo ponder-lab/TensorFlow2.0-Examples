@@ -123,7 +123,8 @@ STEPS = 4
 batch_size = 2
 lambda_scale = 1.
 project_directory = os.path.dirname(__file__)
-synthetic_dataset_path=os.path.join(project_directory, "./synthetic_dataset")
+synthetic_dataset_path=os.path.join(project_directory, "synthetic_dataset")
+weights_path = os.path.join(project_directory, "RPN.h5")
 TrainSet = DataGenerator(synthetic_dataset_path, batch_size)
 
 start_time = timeit.default_timer()
@@ -132,7 +133,7 @@ skipped_time = 0
 model = RPNplus()
 optimizer = tf.keras.optimizers.Adam(lr=1e-4)
 print_time = timeit.default_timer()
-writer = tf.summary.create_file_writer(os.path.join(project_directory, "./log"))
+writer = tf.summary.create_file_writer(os.path.join(project_directory, "log"))
 skipped_time += timeit.default_timer() - print_time
 global_steps = tf.Variable(0, trainable=False, dtype=tf.int64)
 
@@ -164,7 +165,7 @@ for epoch in range(EPOCHS):
         writer.flush()
         skipped_time += timeit.default_timer() - print_time
     print_time = timeit.default_timer()
-    model.save_weights("RPN.h5")
+    model.save_weights(weights_path)
     skipped_time += timeit.default_timer() - print_time
 
 time = timeit.default_timer() - start_time - skipped_time
