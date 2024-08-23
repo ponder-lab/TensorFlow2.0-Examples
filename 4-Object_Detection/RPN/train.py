@@ -120,12 +120,13 @@ STEPS = 4000
 batch_size = 2
 lambda_scale = 1.
 project_directory = os.path.dirname(__file__)
-synthetic_dataset_path=os.path.join(project_directory, "./synthetic_dataset")
+synthetic_dataset_path=os.path.join(project_directory, "synthetic_dataset")
+weights_path = os.path.join(project_directory, "RPN.h5")
 TrainSet = DataGenerator(synthetic_dataset_path, batch_size)
 
 model = RPNplus()
 optimizer = tf.keras.optimizers.Adam(lr=1e-4)
-writer = tf.summary.create_file_writer(os.path.join(project_directory, "./log"))
+writer = tf.summary.create_file_writer(os.path.join(project_directory, "log"))
 global_steps = tf.Variable(0, trainable=False, dtype=tf.int64)
 
 for epoch in range(EPOCHS):
@@ -146,7 +147,7 @@ for epoch in range(EPOCHS):
             tf.summary.scalar("score_loss", score_loss, step=global_steps)
             tf.summary.scalar("boxes_loss", boxes_loss, step=global_steps)
         writer.flush()
-    model.save_weights("RPN.h5")
+    model.save_weights(weights_path)
 
 
 
