@@ -119,12 +119,13 @@ EPOCHS = 10
 STEPS = 4000
 batch_size = 2
 lambda_scale = 1.
-synthetic_dataset_path="./synthetic_dataset"
+project_directory = os.path.dirname(__file__)
+synthetic_dataset_path=os.path.join(project_directory, "./synthetic_dataset")
 TrainSet = DataGenerator(synthetic_dataset_path, batch_size)
 
 model = RPNplus()
 optimizer = tf.keras.optimizers.Adam(lr=1e-4)
-writer = tf.summary.create_file_writer("./log")
+writer = tf.summary.create_file_writer(os.path.join(project_directory, "./log"))
 global_steps = tf.Variable(0, trainable=False, dtype=tf.int64)
 
 for epoch in range(EPOCHS):
