@@ -118,8 +118,8 @@ def compute_loss(target_scores, target_bboxes, target_masks, pred_scores, pred_b
 
     return score_loss, boxes_loss
 
-EPOCHS = 1
-STEPS = 4
+EPOCHS = 5
+STEPS = 40
 batch_size = 2
 lambda_scale = 1.
 project_directory = os.path.dirname(__file__)
