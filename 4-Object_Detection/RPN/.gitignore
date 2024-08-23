@@ -1,4 +1,8 @@
 log/
+RPN.h5
+prediction/
+synthetic_dataset
+synthetic_dataset.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
