@@ -19,6 +19,9 @@ import numpy as np
 from utils import compute_iou, load_gt_boxes, wandhG, compute_regression
 from rpn import RPNplus
 
+from scripts.utils import write_csv
+import timeit
+
 pos_thresh = 0.5
 neg_thresh = 0.1
 grid_width = grid_height = 16
@@ -122,10 +125,18 @@ lambda_scale = 1.
 synthetic_dataset_path="./synthetic_dataset"
 TrainSet = DataGenerator(synthetic_dataset_path, batch_size)
 
+start_time = timeit.default_timer()
+skipped_time = 0
+
 model = RPNplus()
 optimizer = tf.keras.optimizers.Adam(lr=1e-4)
+print_time = timeit.default_timer()
 writer = tf.summary.create_file_writer("./log")
+skipped_time += timeit.default_timer() - print_time
 global_steps = tf.Variable(0, trainable=False, dtype=tf.int64)
+
+loss_accum = 0
+loss_count = 0
 
 for epoch in range(EPOCHS):
     for step in range(STEPS):
@@ -137,15 +148,25 @@ for epoch in range(EPOCHS):
             total_loss = score_loss + lambda_scale * boxes_loss
             gradients = tape.gradient(total_loss, model.trainable_variables)
             optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+            print_time = timeit.default_timer()
             print("=> epoch %d  step %d  total_loss: %.6f  score_loss: %.6f  boxes_loss: %.6f" %(epoch+1, step+1,
                                                         total_loss.numpy(), score_loss.numpy(), boxes_loss.numpy()))
+            loss_accum += total_loss
+            loss_count += 1
+            skipped_time += timeit.default_timer() - print_time
         # writing summary data
+        print_time = timeit.default_timer()
         with writer.as_default():
             tf.summary.scalar("total_loss", total_loss, step=global_steps)
             tf.summary.scalar("score_loss", score_loss, step=global_steps)
             tf.summary.scalar("boxes_loss", boxes_loss, step=global_steps)
         writer.flush()
+        skipped_time += timeit.default_timer() - print_time
+    print_time = timeit.default_timer()
     model.save_weights("RPN.h5")
+    skipped_time += timeit.default_timer() - print_time
 
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(loss_accum) / float(loss_count)
 
-
+write_csv(__file__, epochs=EPOCHS, loss=float(avg_loss), time=time)
