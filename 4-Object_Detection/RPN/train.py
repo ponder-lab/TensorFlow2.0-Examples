@@ -115,8 +115,8 @@ def compute_loss(target_scores, target_bboxes, target_masks, pred_scores, pred_b
 
     return score_loss, boxes_loss
 
-EPOCHS = 10
-STEPS = 4000
+EPOCHS = 1
+STEPS = 4
 batch_size = 2
 lambda_scale = 1.
 synthetic_dataset_path="./synthetic_dataset"
