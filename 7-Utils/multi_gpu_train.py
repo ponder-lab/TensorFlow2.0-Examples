@@ -33,6 +33,8 @@ GPU_SIZE     = 30    # (G)  MemorySIZE per GPU
 
 #------------------------------------ Prepare Dataset ------------------------------------#
 
+project_directory = os.path.dirname(__file__)
+
 train_datagen = ImageDataGenerator(
         rescale=1./255,
         shear_range=0.2,
@@ -40,7 +42,7 @@ train_datagen = ImageDataGenerator(
         horizontal_flip=False)
 
 train_generator = train_datagen.flow_from_directory(
-        './mnist/train',
+        os.path.join(project_directory, './mnist/train'),
         target_size=(IMG_SIZE, IMG_SIZE),
         batch_size=BATCH_SIZE,
         class_mode='categorical')
@@ -50,7 +52,7 @@ test_datagen = ImageDataGenerator(
         horizontal_flip=False)
 
 test_generator = test_datagen.flow_from_directory(
-        './mnist/test',
+        os.path.join(project_directory, './mnist/test'),
         target_size=(IMG_SIZE, IMG_SIZE),
         batch_size=2,
         class_mode='categorical')
@@ -166,7 +168,7 @@ with strategy.scope():
                 pbar.update(1)
 
         print_time = timeit.default_timer()
-        model_path = "./models/weights_%02d" %epoch
+        model_path = os.path.join(project_directory, "./models/weights_%02d") %epoch
         if not os.path.exists(model_path):
             os.makedirs(model_path)
 
