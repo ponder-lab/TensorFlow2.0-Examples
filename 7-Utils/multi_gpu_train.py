@@ -18,6 +18,9 @@ from tqdm import tqdm
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import applications
 
+from scripts.utils import write_csv
+import timeit
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
 
 EPOCHS       = 40
@@ -115,6 +118,15 @@ with strategy.scope():
 
 #------------------------------------ Training Loop -----------------------------------#
 
+start_time = timeit.default_timer()
+skipped_time = 0
+
+loss_accum = 0
+loss_count = 0
+
+acc_accum = 0
+acc_count = 0
+
 # Defining Training Loops
 with strategy.scope():
     @tf.function
@@ -147,14 +159,24 @@ with strategy.scope():
 
                 pbar.set_postfix({'loss' : '%.4f'     %(loss_value / num_batch),
                                   'accuracy' : '%.6f' %(acc_value  / num_batch)})
+                loss_accum += loss_value / num_batch
+                loss_count += 1
+                acc_accum += (acc_value / num_batch)
+                acc_count ++ 1
                 train_accuracy.reset_states()
                 pbar.update(1)
 
+        print_time = timeit.default_timer()
         model_path = "./models/weights_%02d" %epoch
         if not os.path.exists(model_path):
             os.makedirs(model_path)
 
         model.save(os.path.join(model_path, "model.h5"))
         featureExtractor.save(os.path.join(model_path, "featureExtractor.h5"))
+        skipped_time += timeit.default_timer() - print_time
 
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(loss_accum) / float(loss_count)
+avg_acc = float(acc_accum) / float(acc_count)
 
+write_csv(__file__, epochs=EPOCHS, loss=float(avg_loss), accuracy=float(avg_acc), time=time)
