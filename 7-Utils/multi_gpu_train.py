@@ -23,7 +23,7 @@ import timeit
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
 
-EPOCHS       = 40
+EPOCHS       = 1
 SCORE_THRESH = 0.8
 NUM_CLASS    = 10
 EMB_SIZE     = 2     # Embedding Size
