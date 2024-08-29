@@ -163,7 +163,7 @@ with strategy.scope():
                 loss_accum += loss_value / num_batch
                 loss_count += 1
                 acc_accum += (acc_value / num_batch)
-                acc_count ++ 1
+                acc_count += 1
                 train_accuracy.reset_states()
                 pbar.update(1)
 
