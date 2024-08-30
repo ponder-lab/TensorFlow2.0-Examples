@@ -112,7 +112,7 @@ for epoch in range(EPOCHS):
                           test_accuracy.result()*100))
     total_loss += train_loss.result()
     loss_count += 1
-    total_accuracy += train_accuracy.result()*100
+    total_accuracy += train_accuracy.result()
     accuracy_count += 1
     skipped_time += timeit.default_timer() - print_time
     # Reset the metrics for the next epoch
