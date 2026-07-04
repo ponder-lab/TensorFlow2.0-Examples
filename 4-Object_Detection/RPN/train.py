@@ -27,6 +27,7 @@ neg_thresh = 0.1
 grid_width = grid_height = 16
 image_height, image_width = 720, 960
 
+@tf.function
 def encode_label(gt_boxes):
     target_scores = np.zeros(shape=[45, 60, 9, 2]) # 0: background, 1: foreground, ,
     target_bboxes = np.zeros(shape=[45, 60, 9, 4]) # t_x, t_y, t_w, t_h

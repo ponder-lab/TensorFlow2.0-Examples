@@ -24,6 +24,7 @@ ANCHORS         = utils.get_anchors(cfg.YOLO.ANCHORS)
 STRIDES         = np.array(cfg.YOLO.STRIDES)
 IOU_LOSS_THRESH = cfg.YOLO.IOU_LOSS_THRESH
 
+@tf.function
 def YOLOv3(input_layer):
     route_1, route_2, conv = backbone.darknet53(input_layer)
 
@@ -99,6 +100,7 @@ def decode(conv_output, i=0):
 
     return tf.concat([pred_xywh, pred_conf, pred_prob], axis=-1)
 
+@tf.function
 def bbox_iou(boxes1, boxes2):
 
     boxes1_area = boxes1[..., 2] * boxes1[..., 3]
@@ -118,6 +120,7 @@ def bbox_iou(boxes1, boxes2):
 
     return 1.0 * inter_area / union_area
 
+@tf.function
 def bbox_giou(boxes1, boxes2):
 
     boxes1 = tf.concat([boxes1[..., :2] - boxes1[..., 2:] * 0.5,
