@@ -34,6 +34,7 @@ wandhG = np.array([[ 74., 149.],
                    [ 51., 132.],
                    [ 57., 200.]], dtype=np.float32)
 
+@tf.function
 def compute_iou(boxes1, boxes2):
     """(xmin, ymin, xmax, ymax)
     boxes1 shape:  [-1, 4], boxes2 shape: [-1, 4]
@@ -83,6 +84,7 @@ def load_gt_boxes(path):
         roi[iter_, :4] = bba
     return roi
 
+@tf.function
 def compute_regression(box1, box2):
     """
     box1: ground-truth boxes
