@@ -90,6 +90,7 @@ class FPN(tf.keras.Model):
             self.in_channels = out_channels * block.expansion
         return tf.keras.Sequential(layers)
 
+    @tf.function
     def _upsample_add(self, x, y):
         """Upsample and add two feature maps.
         Args:
