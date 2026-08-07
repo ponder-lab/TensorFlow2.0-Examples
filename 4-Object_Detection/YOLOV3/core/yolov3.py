@@ -24,7 +24,6 @@ ANCHORS         = utils.get_anchors(cfg.YOLO.ANCHORS)
 STRIDES         = np.array(cfg.YOLO.STRIDES)
 IOU_LOSS_THRESH = cfg.YOLO.IOU_LOSS_THRESH
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, 416, 416, 3), dtype=tf.float32)])
 def YOLOv3(input_layer):
     route_1, route_2, conv = backbone.darknet53(input_layer)
 
