@@ -90,6 +90,7 @@ class FPN(tf.keras.Model):
             self.in_channels = out_channels * block.expansion
         return tf.keras.Sequential(layers)
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32), tf.TensorSpec(shape=None, dtype=tf.float32)])
     def _upsample_add(self, x, y):
         """Upsample and add two feature maps.
         Args:
@@ -101,6 +102,7 @@ class FPN(tf.keras.Model):
         _, H, W, C = y.shape
         return tf.image.resize(x, size=(H, W), method="bilinear")
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=(1, 416, 416, 3), dtype=tf.float32)])
     def call(self, x, training=False):
         p1 = tf.nn.relu(self.bn1(self.conv1(x), training=training))
         p1 = tf.nn.max_pool2d(p1, ksize=3, strides=2, padding="SAME")

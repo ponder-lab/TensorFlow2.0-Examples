@@ -63,6 +63,7 @@ class RPNplus(tf.keras.Model):
                                                 padding='same', use_bias=False)
 
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=(None, 720, 960, 3), dtype=tf.float32)])
     def call(self, x, training=False):
         h = self.conv1_1(x)
         h = self.conv1_2(h)

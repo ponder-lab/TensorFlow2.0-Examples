@@ -105,6 +105,7 @@ with strategy.scope():
 
 # Defining Training Step
 with strategy.scope():
+    @tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32)])
     def train_step(inputs):
         images, labels = inputs
 
@@ -130,7 +131,7 @@ acc_count = 0
 
 # Defining Training Loops
 with strategy.scope():
-    @tf.function
+    @tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32)])
     def distributed_train_step(dataset_inputs):
         per_replica_losses = strategy.experimental_run_v2(train_step,
                                                           args=(dataset_inputs,))
