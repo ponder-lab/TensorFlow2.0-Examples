@@ -83,7 +83,6 @@ def multilayer_perceptron(x):
     return tf.nn.softmax(output)
 
 # Cross-Entropy loss function.
-@tf.function(input_signature=[tf.TensorSpec(shape=(100, 10), dtype=tf.float32), tf.TensorSpec(shape=(100,), dtype=tf.uint8)])
 def cross_entropy(y_pred, y_true):
     # Encode label to a one hot vector.
     y_true = tf.one_hot(y_true, depth=10)
