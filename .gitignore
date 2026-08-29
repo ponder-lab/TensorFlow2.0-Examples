@@ -199,3 +199,9 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# Materialized by 7-Utils/setup.sh from the digits vendored under
+# 4-Object_Detection/YOLOV3/yymnist/mnist. Derived data, 65,000 files: regenerate it rather than
+# committing it, and keep it out of the tree so running the driver does not leave the working
+# copy dirty.
+7-Utils/mnist/
