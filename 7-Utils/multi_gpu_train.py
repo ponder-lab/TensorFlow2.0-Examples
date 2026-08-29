@@ -95,6 +95,7 @@ with strategy.scope():
     loss_object = tf.keras.losses.CategoricalCrossentropy(
         reduction=tf.keras.losses.Reduction.NONE
     )
+    @tf.function(input_signature=[tf.TensorSpec(shape=(None, None), dtype=tf.float32), tf.TensorSpec(shape=None, dtype=tf.float32)])
     def compute_loss(labels, predictions):
         per_example_loss = loss_object(labels, predictions)
         return tf.nn.compute_average_loss(per_example_loss, global_batch_size=BATCH_SIZE)
@@ -105,6 +106,7 @@ with strategy.scope():
 
 # Defining Training Step
 with strategy.scope():
+    @tf.function(input_signature=[[tf.TensorSpec(shape=(None, 112, 112, 3), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32)]])
     def train_step(inputs):
         images, labels = inputs
 
@@ -130,7 +132,7 @@ acc_count = 0
 
 # Defining Training Loops
 with strategy.scope():
-    @tf.function
+    @tf.function(input_signature=[[tf.TensorSpec(shape=(None, 112, 112, 3), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32)]])
     def distributed_train_step(dataset_inputs):
         per_replica_losses = strategy.experimental_run_v2(train_step,
                                                           args=(dataset_inputs,))
