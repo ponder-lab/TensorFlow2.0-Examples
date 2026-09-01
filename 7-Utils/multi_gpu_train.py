@@ -95,6 +95,7 @@ with strategy.scope():
     loss_object = tf.keras.losses.CategoricalCrossentropy(
         reduction=tf.keras.losses.Reduction.NONE
     )
+    @tf.function
     def compute_loss(labels, predictions):
         per_example_loss = loss_object(labels, predictions)
         return tf.nn.compute_average_loss(per_example_loss, global_batch_size=BATCH_SIZE)
@@ -105,6 +106,7 @@ with strategy.scope():
 
 # Defining Training Step
 with strategy.scope():
+    @tf.function
     def train_step(inputs):
         images, labels = inputs
 
