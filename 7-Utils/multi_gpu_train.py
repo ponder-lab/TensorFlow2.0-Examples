@@ -134,7 +134,7 @@ acc_count = 0
 with strategy.scope():
     @tf.function(input_signature=[[tf.TensorSpec(shape=(None, 112, 112, 3), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32)]])
     def distributed_train_step(dataset_inputs):
-        per_replica_losses = strategy.experimental_run_v2(train_step,
+        per_replica_losses = strategy.run(train_step,
                                                           args=(dataset_inputs,))
         return strategy.reduce(tf.distribute.ReduceOp.SUM, per_replica_losses,
                                axis=None)
