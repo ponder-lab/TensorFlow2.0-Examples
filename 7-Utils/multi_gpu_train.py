@@ -66,6 +66,9 @@ print(len(gpus), "Physical GPU,", len(logical_gpus), "Logical GPUs")
 
 tf.debugging.set_log_device_placement(True)
 strategy = tf.distribute.MirroredStrategy()
+# `Strategy.run` is TensorFlow >= 2.2; earlier releases have only `experimental_run_v2`,
+# which later releases removed. Resolving it once here keeps the example running on both.
+strategy_run = getattr(strategy, "run", None) or strategy.experimental_run_v2
 
 # Defining Model
 with strategy.scope():
@@ -118,8 +121,8 @@ with strategy.scope():
 with strategy.scope():
     @tf.function
     def distributed_train_step(dataset_inputs):
-        per_replica_losses = strategy.run(train_step,
-                                                          args=(dataset_inputs,))
+        per_replica_losses = strategy_run(train_step,
+                                          args=(dataset_inputs,))
         return strategy.reduce(tf.distribute.ReduceOp.SUM, per_replica_losses,
                                axis=None)
     for epoch in range(1, EPOCHS+1):
