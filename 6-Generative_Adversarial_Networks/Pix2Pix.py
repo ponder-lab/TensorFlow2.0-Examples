@@ -77,7 +77,7 @@ def normalize(input_image, real_image):
 
     return input_image, real_image
 
-@tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32), tf.TensorSpec(shape=None, dtype=tf.float32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, None), dtype=tf.float32), tf.TensorSpec(shape=(None, None, None), dtype=tf.float32)])
 def random_jitter(input_image, real_image):
     # resizing to 286 x 286 x 3
     input_image, real_image = resize(input_image, real_image, 286, 286)

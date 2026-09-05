@@ -106,7 +106,7 @@ with strategy.scope():
 
 # Defining Training Step
 with strategy.scope():
-    @tf.function(input_signature=[[tf.TensorSpec(shape=(None, 112, 112, 3), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32)]])
+    @tf.function
     def train_step(inputs):
         images, labels = inputs
 

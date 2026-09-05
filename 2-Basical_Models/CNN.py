@@ -55,7 +55,7 @@ class MyModel(Model):
       self.d1 = Dense(128, activation='relu')
       self.d2 = Dense(10, activation='softmax')
 
-  @tf.function
+  @tf.function(input_signature=[tf.TensorSpec(shape=(None, 28, 28, 1), dtype=tf.float32)])
   def call(self, x):
       x = self.conv1(x)
       x = self.flatten(x)
@@ -77,7 +77,7 @@ test_loss = tf.keras.metrics.Mean(name='test_loss')
 test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
 
 # Use tf.GradientTape to train the model.
-@tf.function
+@tf.function(input_signature=[tf.TensorSpec(shape=(32, 28, 28, 1), dtype=tf.float64), tf.TensorSpec(shape=(32,), dtype=tf.uint8)])
 def train_step(images, labels):
     with tf.GradientTape() as tape:
         predictions = model(images)
@@ -87,7 +87,7 @@ def train_step(images, labels):
     train_loss(loss)
     train_accuracy(labels, predictions)
 
-@tf.function
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, 28, 28, 1), dtype=tf.float64), tf.TensorSpec(shape=(None,), dtype=tf.uint8)])
 def test_step(images, labels):
     predictions = model(images)
     t_loss = loss_object(labels, predictions)
