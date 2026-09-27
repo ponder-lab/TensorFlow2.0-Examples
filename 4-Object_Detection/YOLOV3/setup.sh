@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-PYTHON="/usr/local/bin/python3.10"
+PYTHON="${PYTHON:-python3.10}"
 
 if [[ ! -f "./data/dataset/yymnist_train.txt" ]]; then
     $PYTHON yymnist/make_data.py --images_num 1000 --images_path ./data/dataset/train --labels_txt ./data/dataset/yymnist_train.txt
