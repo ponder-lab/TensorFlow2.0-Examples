@@ -32,7 +32,7 @@
 #   the sibling `4-Object_Detection/YOLOV3/setup.sh`, which guards the same way.
 set -eu
 
-PYTHON="${PYTHON:-/usr/local/bin/python3.10}"
+PYTHON="${PYTHON:-python3.10}"
 here="$(cd "$(dirname "$0")" && pwd)"
 src="$here/../4-Object_Detection/YOLOV3/yymnist/mnist"
 dst="$here/mnist"
