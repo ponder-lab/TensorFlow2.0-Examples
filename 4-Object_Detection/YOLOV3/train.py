@@ -52,6 +52,7 @@ writer = tf.summary.create_file_writer(logdir)
 loss_accum = tf.Variable(0.)
 loss_count = tf.Variable(0)
 
+@tf.function
 def train_step(image_data, target):
     global skipped_time, loss_accum, loss_count
     with tf.GradientTape() as tape:
