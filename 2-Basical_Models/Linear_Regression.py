@@ -52,11 +52,17 @@ outputs = inputs * TRUE_W + TRUE_b + noise
 # We'll plot the model's predictions in red and the training data in blue.
 
 def plot(epoch):
+    global skipped_time
+    # The model call and loss are computed as before, and stay timed; only the drawing is skipped.
+    predictions = model(inputs)
+    loss_text = str(compute_loss(outputs, model(inputs)).numpy())
+    draw_time = timeit.default_timer()
     plt.scatter(inputs, outputs, c='b')
-    plt.scatter(inputs, model(inputs), c='r')
-    plt.title("epoch %2d, loss = %s" %(epoch, str(compute_loss(outputs, model(inputs)).numpy())))
+    plt.scatter(inputs, predictions, c='r')
+    plt.title("epoch %2d, loss = %s" %(epoch, loss_text))
     plt.legend()
     plt.draw()
+    skipped_time += timeit.default_timer() - draw_time
     # plt.ion()   # replacing plt.show()
     # plt.pause(1)
     # plt.close()
@@ -82,9 +88,7 @@ for epoch in range(EPOCHS):
     total_loss += loss.numpy()
     loss_count += 1
     skipped_time += timeit.default_timer() - print_time
-    plot_time = timeit.default_timer()
     plot(epoch + 1)
-    skipped_time += timeit.default_timer() - plot_time
 
 time = timeit.default_timer() - start_time - skipped_time
 avg_loss = float(total_loss) / float(loss_count)
