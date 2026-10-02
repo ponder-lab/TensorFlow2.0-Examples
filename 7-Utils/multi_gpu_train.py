@@ -160,14 +160,18 @@ with strategy.scope():
                 loss_value += batch_loss
                 acc_value  += batch_acc
 
+                progress_time = timeit.default_timer()
                 pbar.set_postfix({'loss' : '%.4f'     %(loss_value / num_batch),
                                   'accuracy' : '%.6f' %(acc_value  / num_batch)})
+                skipped_time += timeit.default_timer() - progress_time
                 loss_accum += loss_value / num_batch
                 loss_count += 1
                 acc_accum += (acc_value / num_batch)
                 acc_count += 1
                 train_accuracy.reset_states()
+                progress_time = timeit.default_timer()
                 pbar.update(1)
+                skipped_time += timeit.default_timer() - progress_time
 
         print_time = timeit.default_timer()
         model_path = os.path.join(project_directory, "./models/weights_%02d") %epoch
