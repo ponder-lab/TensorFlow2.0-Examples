@@ -158,9 +158,10 @@ with strategy.scope():
                 loss_value += batch_loss
                 acc_value  += batch_acc
 
+                postfix = {'loss' : '%.4f'     %(loss_value / num_batch),
+                           'accuracy' : '%.6f' %(acc_value  / num_batch)}
                 progress_time = timeit.default_timer()
-                pbar.set_postfix({'loss' : '%.4f'     %(loss_value / num_batch),
-                                  'accuracy' : '%.6f' %(acc_value  / num_batch)})
+                pbar.set_postfix(postfix)
                 skipped_time += timeit.default_timer() - progress_time
                 loss_accum += loss_value / num_batch
                 loss_count += 1
