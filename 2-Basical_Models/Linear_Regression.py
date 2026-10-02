@@ -84,7 +84,9 @@ for epoch in range(EPOCHS):
     total_loss += loss.numpy()
     loss_count += 1
     skipped_time += timeit.default_timer() - print_time
+    plot_time = timeit.default_timer()
     plot(epoch + 1)
+    skipped_time += timeit.default_timer() - plot_time
 
 time = timeit.default_timer() - start_time - skipped_time
 avg_loss = float(total_loss) / float(loss_count)
