@@ -59,7 +59,7 @@ test_generator = test_datagen.flow_from_directory(
 
 #------------------------------------ Build Mode -----------------------------------#
 
-tf.debugging.set_log_device_placement(True)
+tf.debugging.set_log_device_placement(False)
 gpus = tf.config.experimental.list_physical_devices('GPU')
 
 for gpu in gpus:
@@ -69,7 +69,7 @@ for gpu in gpus:
 logical_gpus = tf.config.experimental.list_logical_devices('GPU')
 print(len(gpus), "Physical GPU,", len(logical_gpus), "Logical GPUs")
 
-tf.debugging.set_log_device_placement(True)
+tf.debugging.set_log_device_placement(False)
 strategy = tf.distribute.MirroredStrategy()
 
 # Defining Model
@@ -144,7 +144,7 @@ with strategy.scope():
         test_dataset     = iter(test_generator)
 
         with tqdm(total=batchs_per_epoch,
-                  desc="Epoch %2d/%2d" %(epoch, EPOCHS)) as pbar:
+                  desc="Epoch %2d/%2d" %(epoch, EPOCHS), disable=True) as pbar:
             loss_value = 0.
             acc_value  = 0.
             num_batch  = 0
@@ -158,19 +158,14 @@ with strategy.scope():
                 loss_value += batch_loss
                 acc_value  += batch_acc
 
-                postfix = {'loss' : '%.4f'     %(loss_value / num_batch),
-                           'accuracy' : '%.6f' %(acc_value  / num_batch)}
-                progress_time = timeit.default_timer()
-                pbar.set_postfix(postfix)
-                skipped_time += timeit.default_timer() - progress_time
+                pbar.set_postfix({'loss' : '%.4f'     %(loss_value / num_batch),
+                                  'accuracy' : '%.6f' %(acc_value  / num_batch)})
                 loss_accum += loss_value / num_batch
                 loss_count += 1
                 acc_accum += (acc_value / num_batch)
                 acc_count += 1
                 train_accuracy.reset_states()
-                progress_time = timeit.default_timer()
                 pbar.update(1)
-                skipped_time += timeit.default_timer() - progress_time
 
         print_time = timeit.default_timer()
         model_path = os.path.join(project_directory, "./models/weights_%02d") %epoch
