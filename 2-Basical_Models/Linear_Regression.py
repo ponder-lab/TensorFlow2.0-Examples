@@ -82,10 +82,11 @@ for epoch in range(EPOCHS):
     model.W.assign_sub(learning_rate * dW)
     model.b.assign_sub(learning_rate * db)
 
+    W_v, b_v, loss_v = model.W.numpy(), model.b.numpy(), loss.numpy()  # Read in the timed region, so waiting for queued GPU work is counted; only the print is skipped.
     print_time = timeit.default_timer()
     print("=> epoch %2d: w_true= %.2f, w_pred= %.2f; b_true= %.2f, b_pred= %.2f, loss= %.2f" %(
-          epoch+1, TRUE_W, model.W.numpy(), TRUE_b, model.b.numpy(), loss.numpy()))
-    total_loss += loss.numpy()
+          epoch+1, TRUE_W, W_v, TRUE_b, b_v, loss_v))
+    total_loss += loss_v
     loss_count += 1
     skipped_time += timeit.default_timer() - print_time
     plot(epoch + 1)

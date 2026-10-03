@@ -102,13 +102,15 @@ for epoch in range(EPOCHS):
     for test_images, test_labels in test_ds:
         test_step(test_images, test_labels)
 
+    train_loss_v, train_acc_v = float(train_loss.result()), float(train_accuracy.result())  # Read in the timed region, so waiting for queued GPU work is counted; only the print is skipped.
+    test_loss_v, test_acc_v = float(test_loss.result()), float(test_accuracy.result())
     print_time = timeit.default_timer()
     template = 'Epoch {}, Loss: {}, Accuracy: {}, Test Loss: {}, Test Accuracy: {}'
     print(template.format(epoch+1,
-                          train_loss.result(),
-                          train_accuracy.result()*100,
-                          test_loss.result(),
-                          test_accuracy.result()*100))
+                          train_loss_v,
+                          train_acc_v*100,
+                          test_loss_v,
+                          test_acc_v*100))
     total_loss += train_loss.result()
     loss_count += 1
     total_accuracy += train_accuracy.result()

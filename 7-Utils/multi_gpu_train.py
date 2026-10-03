@@ -59,7 +59,7 @@ test_generator = test_datagen.flow_from_directory(
 
 #------------------------------------ Build Mode -----------------------------------#
 
-tf.debugging.set_log_device_placement(True)
+tf.debugging.set_log_device_placement(False)  # Logging every op's device to stderr would be I/O inside the timed loop.
 gpus = tf.config.experimental.list_physical_devices('GPU')
 
 for gpu in gpus:
@@ -69,7 +69,7 @@ for gpu in gpus:
 logical_gpus = tf.config.experimental.list_logical_devices('GPU')
 print(len(gpus), "Physical GPU,", len(logical_gpus), "Logical GPUs")
 
-tf.debugging.set_log_device_placement(True)
+tf.debugging.set_log_device_placement(False)  # Logging every op's device to stderr would be I/O inside the timed loop.
 strategy = tf.distribute.MirroredStrategy()
 
 # Defining Model
