@@ -138,9 +138,7 @@ for step, (batch_x, batch_y) in enumerate(train_data.take(training_steps), 1):
         acc  = accuracy(pred, batch_y)
         total_accuracy += acc
         accuracy_count += 1
-        print_time = timeit.default_timer()
         print("step: %i, loss: %f, accuracy: %f" % (step+1, loss, acc))
-        skipped_time += timeit.default_timer() - print_time
 
 time = timeit.default_timer() - start_time - skipped_time
 avg_loss = float(total_loss) / float(loss_count)

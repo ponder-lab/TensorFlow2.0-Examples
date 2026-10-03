@@ -103,7 +103,6 @@ for epoch in range(EPOCHS):
     for test_images, test_labels in test_ds:
         test_step(test_images, test_labels)
 
-    print_time = timeit.default_timer()
     template = 'Epoch {}, Loss: {}, Accuracy: {}, Test Loss: {}, Test Accuracy: {}'
     print(template.format(epoch+1,
                           train_loss.result(),
@@ -114,7 +113,6 @@ for epoch in range(EPOCHS):
     loss_count += 1
     total_accuracy += train_accuracy.result()
     accuracy_count += 1
-    skipped_time += timeit.default_timer() - print_time
     # Reset the metrics for the next epoch
     train_loss.reset_states()
     train_accuracy.reset_states()
