@@ -28,9 +28,11 @@ class Model(object):
         self.W = tf.Variable(10.0)
         self.b = tf.Variable(-5.0)
 
+    @tf.function
     def __call__(self, inputs):
         return self.W * inputs + self.b
 
+@tf.function
 def compute_loss(y_true, y_pred):
     return tf.reduce_mean(tf.square(y_true-y_pred))
 

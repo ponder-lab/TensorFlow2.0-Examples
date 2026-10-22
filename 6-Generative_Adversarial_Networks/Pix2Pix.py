@@ -37,6 +37,7 @@ IMG_HEIGHT = 256
 OUTPUT_CHANNELS = 3
 
 
+@tf.function
 def load(image_file):
 
     image = tf.io.read_file(image_file)
@@ -91,6 +92,7 @@ def random_jitter(input_image, real_image):
     return input_image, real_image
 
 
+@tf.function
 def load_image_train(image_file):
 
     input_image, real_image = load(image_file)
