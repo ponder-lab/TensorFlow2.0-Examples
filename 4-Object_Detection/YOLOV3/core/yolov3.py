@@ -99,6 +99,7 @@ def decode(conv_output, i=0):
 
     return tf.concat([pred_xywh, pred_conf, pred_prob], axis=-1)
 
+@tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32), tf.TensorSpec(shape=(None, 1, 1, 1, 150, 4), dtype=tf.float32)])
 def bbox_iou(boxes1, boxes2):
 
     boxes1_area = boxes1[..., 2] * boxes1[..., 3]
@@ -118,6 +119,7 @@ def bbox_iou(boxes1, boxes2):
 
     return 1.0 * inter_area / union_area
 
+@tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32), tf.TensorSpec(shape=None, dtype=tf.float32)])
 def bbox_giou(boxes1, boxes2):
 
     boxes1 = tf.concat([boxes1[..., :2] - boxes1[..., 2:] * 0.5,
