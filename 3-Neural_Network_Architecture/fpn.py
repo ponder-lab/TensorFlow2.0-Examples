@@ -46,6 +46,7 @@ class BasicBlock(tf.keras.Model):
         else:
             self.shortcut = lambda x,_: x
 
+    @tf.function
     def call(self, x, training=False):
         # if training: print("=> training network ... ")
         out = tf.nn.relu(self.bn1(self.conv1(x), training=training))
