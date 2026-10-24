@@ -28,11 +28,11 @@ class Model(object):
         self.W = tf.Variable(10.0)
         self.b = tf.Variable(-5.0)
 
-    @tf.function(input_signature=[tf.TensorSpec(shape=(1000,), dtype=tf.float32)])
+    @tf.function(reduce_retracing=True)
     def __call__(self, inputs):
         return self.W * inputs + self.b
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(1000,), dtype=tf.float32), tf.TensorSpec(shape=(1000,), dtype=tf.float32)])
+@tf.function(reduce_retracing=True)
 def compute_loss(y_true, y_pred):
     return tf.reduce_mean(tf.square(y_true-y_pred))
 

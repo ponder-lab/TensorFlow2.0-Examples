@@ -70,7 +70,7 @@ start_time = timeit.default_timer()
 skipped_time = 0
 
 # Create model
-@tf.function(input_signature=[tf.TensorSpec(shape=(100, 784), dtype=tf.float32)])
+@tf.function(reduce_retracing=True)
 def multilayer_perceptron(x):
     # Hidden fully connected layer with 256 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
@@ -92,7 +92,7 @@ def cross_entropy(y_pred, y_true):
     return tf.reduce_mean(-tf.reduce_sum(y_true * tf.math.log(y_pred)))
 
 # Accuracy metric.
-@tf.function(input_signature=[tf.TensorSpec(shape=(100, 10), dtype=tf.float32), tf.TensorSpec(shape=(100,), dtype=tf.uint8)])
+@tf.function(reduce_retracing=True)
 def accuracy(y_pred, y_true):
     # Predicted class is the index of highest score in prediction vector (i.e. argmax).
     correct_prediction = tf.equal(tf.argmax(y_pred, 1), tf.cast(y_true, tf.int64))
@@ -103,7 +103,7 @@ optimizer = tf.optimizers.SGD(learning_rate)
 
 
 # Optimization process.
-@tf.function(input_signature=[tf.TensorSpec(shape=(100, 784), dtype=tf.float32), tf.TensorSpec(shape=(100,), dtype=tf.uint8)])
+@tf.function(reduce_retracing=True)
 def train_step(x, y):
     # Wrap computation inside a GradientTape for automatic differentiation.
     with tf.GradientTape() as tape:
