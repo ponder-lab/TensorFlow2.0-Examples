@@ -37,6 +37,7 @@ IMG_HEIGHT = 256
 OUTPUT_CHANNELS = 3
 
 
+@tf.function
 def load(image_file):
 
     image = tf.io.read_file(image_file)
@@ -69,6 +70,7 @@ def random_crop(input_image, real_image):
     return cropped_image[0], cropped_image[1]
 
 # normalizing the images to [-1, 1]
+@tf.function
 def normalize(input_image, real_image):
 
     input_image = (input_image / 127.5) - 1
@@ -91,6 +93,7 @@ def random_jitter(input_image, real_image):
     return input_image, real_image
 
 
+@tf.function
 def load_image_train(image_file):
 
     input_image, real_image = load(image_file)

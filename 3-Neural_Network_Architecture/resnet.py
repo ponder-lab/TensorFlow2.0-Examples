@@ -38,6 +38,7 @@ class BasicBlock(tf.keras.Model):
         else:
             self.shortcut = lambda x,_: x
 
+    @tf.function
     def call(self, x, training=False):
         # if training: print("=> training network ... ")
         out = tf.nn.relu(self.bn1(self.conv1(x), training=training))
@@ -100,6 +101,7 @@ class ResNet(tf.keras.Model):
             self.in_channels = out_channels * block.expansion
         return tf.keras.Sequential(layers)
 
+    @tf.function
     def call(self, x, training=False):
         out = tf.nn.relu(self.bn1(self.conv1(x), training))
         out = self.layer1(out, training=training)

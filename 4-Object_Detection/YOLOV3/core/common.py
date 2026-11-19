@@ -20,6 +20,7 @@ class BatchNormalization(tf.keras.layers.BatchNormalization):
     stored moving `var` and `mean` in the "inference mode", and both `gama`
     and `beta` will not be updated !
     """
+    @tf.function
     def call(self, x, training=False):
         if not training:
             training = tf.constant(False)
