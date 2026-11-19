@@ -37,6 +37,7 @@ IMG_HEIGHT = 256
 OUTPUT_CHANNELS = 3
 
 
+@tf.function(input_signature=[tf.TensorSpec(shape=(), dtype=tf.string)])
 def load(image_file):
 
     image = tf.io.read_file(image_file)
@@ -69,6 +70,7 @@ def random_crop(input_image, real_image):
     return cropped_image[0], cropped_image[1]
 
 # normalizing the images to [-1, 1]
+@tf.function(input_signature=[tf.TensorSpec(shape=(256, 256, 3), dtype=tf.float32), tf.TensorSpec(shape=(256, 256, 3), dtype=tf.float32)])
 def normalize(input_image, real_image):
 
     input_image = (input_image / 127.5) - 1
@@ -76,7 +78,7 @@ def normalize(input_image, real_image):
 
     return input_image, real_image
 
-@tf.function()
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, None), dtype=tf.float32), tf.TensorSpec(shape=(None, None, None), dtype=tf.float32)])
 def random_jitter(input_image, real_image):
     # resizing to 286 x 286 x 3
     input_image, real_image = resize(input_image, real_image, 286, 286)
@@ -91,6 +93,7 @@ def random_jitter(input_image, real_image):
     return input_image, real_image
 
 
+@tf.function(input_signature=[tf.TensorSpec(shape=(), dtype=tf.string)])
 def load_image_train(image_file):
 
     input_image, real_image = load(image_file)
@@ -281,7 +284,7 @@ def generate_images(model, test_input, tar):
         plt.axis('off')
     plt.show()
 
-@tf.function
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, 256, 256, 3), dtype=tf.float32), tf.TensorSpec(shape=(None, 256, 256, 3), dtype=tf.float32)])
 def train_step(input_image, target):
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
         gen_output = generator(input_image, training=True)
