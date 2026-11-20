@@ -70,6 +70,7 @@ def random_crop(input_image, real_image):
     return cropped_image[0], cropped_image[1]
 
 # normalizing the images to [-1, 1]
+@tf.function
 def normalize(input_image, real_image):
 
     input_image = (input_image / 127.5) - 1
